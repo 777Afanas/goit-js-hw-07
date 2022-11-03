@@ -43,4 +43,6 @@ function onGalleryContainerClick(evt) {
     instance.show()
 }
 
+
+
 // console.log(galleryItems);
