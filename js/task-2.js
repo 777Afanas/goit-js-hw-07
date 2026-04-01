@@ -35,3 +35,22 @@ const images = [
     alt: 'Zebras on Zebra',
   },
 ];
+
+// Функція для створення карточки createGalleryCard
+const createGalleryCard = image => {
+  const { url, alt } = image;
+  return `
+  <li class="item">
+    <img src="${url}" alt="${alt}">
+  <li>`;
+};
+
+// Створення масиву рядків із елементами
+const galleryCardsTemplate = images
+  .map(image => createGalleryCard(image))
+  .join('');
+
+console.log(galleryCardsTemplate);
+
+const galleryListEl = document.querySelector('.js-gallery');
+galleryListEl.insertAdjacentHTML('afterbegin', galleryCardsTemplate);
