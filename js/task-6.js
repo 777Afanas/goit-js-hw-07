@@ -1,34 +1,96 @@
-// Напиши скрипт створення й очищення колекції елементів
-// з наступним функціоналом.
-// Є input, у який користувач вводить бажану кількість
-// елементів. Після натискання на кнопку Create має
-// рендеритися (додаватися в DOM) колекція з відповідною
-// кількістю елементів і очищатися значення в інпуті.
-// При повторному натисканні на кнопку Create поверх старої
-// колекції має рендеритись нова. Після натискання на
-// кнопку Destroy колекція елементів має очищатися.
+//КОМПАКТНИЙ ВАРІАНТ - без зайвиї проміжних змінних
+//та з об'єднаною логікою
 
-// Після натискання користувачем на кнопку Create треба
-// провалідувати значення в input, воно має бути в межах
-//  від 1 до 100 включно. Тільки якщо воно задоволяє умову,
-// мають додаватися нові <div> елементи в DOM.
+const refs = {
+  input: document.querySelector('.js-box-number'),
+  create: document.querySelector('[data-create]'),
+  destroy: document.querySelector('[data-destroy]'),
+  container: document.querySelector('#boxes'),
+};
 
-// Для рендеру елементів на сторінці створи функцію
-// createBoxes(amount), яка приймає один параметр — число,
-// що зберігає кількість елементів для рендеру.
-// Функція має створювати стільки <div> елементів,
-// скільки вказано в параметрі amount і додавати їх
-// у DOM дочірніми елементами для div#boxes.
-
-// Розміри першого <div> елемента мають бути 30px на 30px.
-// Кожен наступний елемент повинен бути ширшим і вищим
-// від попереднього на 10px.
-// Усі елементи повинні мати випадковий колір фону.
-// Використовуй готову функцію getRandomHexColor()
-// для отримання випадкового кольору.
-
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
+const getRandomHexColor = () =>
+  `#${Math.floor(Math.random() * 16777215)
     .toString(16)
     .padStart(6, 0)}`;
+
+function createBoxes(amount) {
+  const markup = [...Array(amount)]
+    .map((_, i) => {
+      const size = 30 + i * 10;
+      return `<div style="width: ${size}px; height: ${size}px; background-color: ${getRandomHexColor()}"></div>`;
+    })
+    .join('');
+
+  refs.container.insertAdjacentHTML('beforeend', markup);
+  refs.input.value = '';
 }
+
+// const destroyBoxes = () => (refs.container.innerHTML = '');
+const destroyBoxes = () => {
+  refs.container.innerHTML = '';
+  refs.input.value = '';
+};
+
+refs.create.addEventListener('click', () => {
+  const val = Number(refs.input.value);
+  if (val >= 1 && val <= 100) createBoxes(val);
+});
+
+refs.destroy.addEventListener('click', destroyBoxes);
+
+// ПРОСТИЙ ВАРІАНТ
+
+// const refs = {
+//   input: document.querySelector('.js-box-number'),
+//   create: document.querySelector('[data-create]'),
+//   destroy: document.querySelector('[data-destroy]'),
+//   boxes: document.querySelector('#boxes'),
+// };
+
+// function getRandomHexColor() {
+//   return `#${Math.floor(Math.random() * 16777215)
+//     .toString(16)
+//     .padStart(6, 0)}`;
+// }
+
+// let boxesNumber = 0;
+
+// refs.input.addEventListener('input', () => {
+//   boxesNumber = Number(refs.input.value);
+// });
+
+// const createBoxes = amount => {
+//   const boxesArr = [];
+//   let initialWidth = 30;
+//   let initialHeight = 30;
+
+//   for (let i = 0; i < amount; i++) {
+//     const boxEl = document.createElement('div');
+//     boxEl.style.width = `${initialWidth}px`;
+//     boxEl.style.height = `${initialHeight}px`;
+//     boxEl.style.backgroundColor = getRandomHexColor();
+
+//     boxesArr.push(boxEl);
+//     initialWidth += 10;
+//     initialHeight += 10;
+//   }
+
+//   boxes.append(...boxesArr);
+// };
+
+// const destroyBoxes = () => {
+//   boxes.innerHTML = '';
+// };
+
+// const onCreateBtnClick = () => {
+//   // if (boxesNumber < 1 || boxesNumber > 100) return;
+//   if (!(boxesNumber > 1 && boxesNumber <= 100)) return;
+//   createBoxes(boxesNumber);
+// };
+
+// const onDestroyBtnClick = () => {
+//   destroyBoxes();
+// };
+
+// refs.create.addEventListener('click', onCreateBtnClick);
+// refs.destroy.addEventListener('click', onDestroyBtnClick);
